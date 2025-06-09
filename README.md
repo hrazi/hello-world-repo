@@ -1,3 +1,5 @@
 # hello-world-repo
 
-A simple hello world repository created with Manus AI. Visit `index.html` to see a small web page that lists sample projects.
+This repo contains a simple client-side web app for tracking projects.
+Open `index.html` in a browser to add projects with a name, status and a link.
+The app stores your list in `localStorage` so it persists across sessions.

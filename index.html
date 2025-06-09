@@ -3,15 +3,70 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Projects</title>
+    <title>Project Tracker</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        form { margin-bottom: 20px; }
+        label { display: block; margin-top: 10px; }
+    </style>
 </head>
 <body>
-    <h1>Hello World</h1>
-    <p>Below is a list of projects that I've worked on:</p>
-    <ul>
-        <li>Sample Project A</li>
-        <li>Sample Project B</li>
-        <li>Sample Project C</li>
-    </ul>
+    <h1>Project Tracker</h1>
+
+    <form id="projectForm">
+        <label>
+            Name:
+            <input type="text" name="name" required>
+        </label>
+        <label>
+            Status:
+            <input type="text" name="status" required>
+        </label>
+        <label>
+            Link:
+            <input type="url" name="link" required>
+        </label>
+        <button type="submit">Add Project</button>
+    </form>
+
+    <h2>Projects</h2>
+    <ul id="projectList"></ul>
+
+    <script>
+        const projectForm = document.getElementById('projectForm');
+        const projectList = document.getElementById('projectList');
+
+        function loadProjects() {
+            const projects = JSON.parse(localStorage.getItem('projects')) || [];
+            projectList.innerHTML = '';
+            for (const { name, status, link } of projects) {
+                const li = document.createElement('li');
+                const a = document.createElement('a');
+                a.href = link;
+                a.textContent = name;
+                a.target = '_blank';
+                li.appendChild(a);
+                li.appendChild(document.createTextNode(' - ' + status));
+                projectList.appendChild(li);
+            }
+        }
+
+        projectForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const formData = new FormData(projectForm);
+            const project = {
+                name: formData.get('name'),
+                status: formData.get('status'),
+                link: formData.get('link')
+            };
+            const projects = JSON.parse(localStorage.getItem('projects')) || [];
+            projects.push(project);
+            localStorage.setItem('projects', JSON.stringify(projects));
+            projectForm.reset();
+            loadProjects();
+        });
+
+        window.addEventListener('DOMContentLoaded', loadProjects);
+    </script>
 </body>
 </html>
