@@ -3,15 +3,74 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Projects</title>
+    <title>Project Tracker</title>
+    <style>
+        table, th, td { border: 1px solid #000; border-collapse: collapse; }
+        th, td { padding: 4px 8px; }
+    </style>
 </head>
 <body>
-    <h1>Hello World</h1>
-    <p>Below is a list of projects that I've worked on:</p>
-    <ul>
-        <li>Sample Project A</li>
-        <li>Sample Project B</li>
-        <li>Sample Project C</li>
-    </ul>
+    <h1>Project Tracker</h1>
+
+    <form id="project-form">
+        <label>
+            Project Name:
+            <input id="project-name" required>
+        </label>
+        <label>
+            Status:
+            <input id="project-status" required>
+        </label>
+        <label>
+            Link:
+            <input id="project-link" type="url" required>
+        </label>
+        <button type="submit">Add Project</button>
+    </form>
+
+    <h2>All Projects</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Status</th>
+                <th>Link</th>
+            </tr>
+        </thead>
+        <tbody id="project-list">
+        </tbody>
+    </table>
+
+<script>
+const form = document.getElementById('project-form');
+const list = document.getElementById('project-list');
+let projects = JSON.parse(localStorage.getItem('projects') || '[]');
+
+function renderProjects() {
+    list.innerHTML = '';
+    projects.forEach((p, index) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${p.name}</td>
+            <td>${p.status}</td>
+            <td><a href="${p.link}" target="_blank">${p.link}</a></td>
+        `;
+        list.appendChild(row);
+    });
+}
+
+form.addEventListener('submit', e => {
+    e.preventDefault();
+    const name = document.getElementById('project-name').value.trim();
+    const status = document.getElementById('project-status').value.trim();
+    const link = document.getElementById('project-link').value.trim();
+    projects.push({ name, status, link });
+    localStorage.setItem('projects', JSON.stringify(projects));
+    form.reset();
+    renderProjects();
+});
+
+renderProjects();
+</script>
 </body>
 </html>
